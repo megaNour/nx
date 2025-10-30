@@ -1,0 +1,3 @@
+[submodule "lib/shout"]
+	path = lib/shout
+	url = https://github.com/megaNour/shout.git
