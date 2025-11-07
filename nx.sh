@@ -76,7 +76,7 @@ console | start | stop)
   . "$ENTRY/lib/shout/libshout.sh"
   command=$ENTRY/${command}.sh
   if [ -f "$command" ]; then
-    "$command" "$@"
+    . "$command"
   else
     nxHelp
   fi
