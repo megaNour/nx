@@ -60,7 +60,7 @@ if [ -n "$1" ]; then shift; fi
 
 case "$command" in
 console | start | stop)
-  "$NUXEO_CTL $command"
+  "$NUXEO_HOME/bin/nuxeoctl" $command
   ;;
 *)
   ENTRY=$(CDPATH="" cd -- "$(dirname "$0")" && pwd)
