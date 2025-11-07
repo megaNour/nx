@@ -16,10 +16,10 @@ if [ "$1" = help ] || [ "$1" = --help ] || [ "$1" = -h ]; then
 fi
 
 exe_name=nx
-bin_name=${exe_name}.sh
 install_dir=${1:-$HOME/.local/bin}
 target="$install_dir/$exe_name"
-entry=$(CDPATH="" cd -- "$(dirname "$0")" && pwd)/$bin_name
+entry=$(CDPATH="" cd -- "$(dirname "$0")" && pwd)
+bin=$entry/${exe_name}.sh
 
 mkdir -p "$install_dir"
 
@@ -28,7 +28,7 @@ cat <<EOF >"$target"
 
 set -e
 
-$entry "\$@"
+$bin "\$@"
 EOF
 
 chmod 744 "$target"

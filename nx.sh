@@ -5,7 +5,6 @@ set -e
 export NAME=nx
 ENTRY=$(CDPATH="" cd -- "$(dirname "$0")" && pwd)
 export ENTRY
-eval "$(shoutctl source 2>/dev/null)"
 
 nxHelp() {
   cat <<EOF
@@ -64,6 +63,8 @@ console | start | stop)
   ;;
 *)
   ENTRY=$(CDPATH="" cd -- "$(dirname "$0")" && pwd)
+  . "$ENTRY/lib/shout/colors.sh"
+  . "$ENTRY/lib/shout/libshout.sh"
   command=$ENTRY/${command}.sh
   if [ -f "$command" ]; then
     "$command" "$@"
