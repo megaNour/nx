@@ -6,17 +6,21 @@ NAME=${NAME:-$0}
 
 printHelp() {
   cat <<EOF
-Usage: $NAME [OPTIONS]
+Usage: $NAME [OPTIONS] [-- [CURL_OPTION...]]
+
+Environments:
+  NUXEO_URL
+  NUXEO_CREDENTIALS   in a <id>:<pwd>
 
 Options:
 
-  -h, --help                  Show this help message and exit
-  -d, --dry-run, --dry[Rr]un  Do not execute the curl command
-  -s, --silent                Don't print the curl command
-  -n, --name --title NAME     Document name (title)
-  -p, --path PATH             Path relative to workspace root
-  -t, --type TYPE             Document type
-  -u, --url  URL              Server URL
+  --  [CURL_OPTION...]             No -X, --request allowed. Already in -XPOST mode.
+  -d, --dry-run, --dry[Rr]un       Do not execute the curl command
+  -h, --help                       Show this help message and exit
+  -n, --name --title NAME          Document name (title)
+  -p, --path PATH                  Path relative to workspace root
+  -t, --type TYPE                  Document type
+  -u, --url  URL                   Server URL
 
 Examples:
   $NAME -n my_doc -p my_workspace -t workspace -u localhost:8080
@@ -32,7 +36,7 @@ properAndLowercase() {
   }'
 }
 
-eval set -- "$(getopt -o hdn:p:st:u: -l dry-run,dryrun,dryRun,help,name:,path:,silent,type:,url: -- "$@")"
+eval set -- "$(getopt -o dhn:p:t:u: -l dry-run,dryrun,dryRun,help,name:,path:,type:,url: -- "$@")"
 
 while true; do
   case "$1" in
@@ -47,9 +51,6 @@ while true; do
     doc_path=$2
     shift
     ;;
-  -s | --silent)
-    silent=1
-    ;;
   -t | --type)
     doc_type=$2
     shift
@@ -62,12 +63,23 @@ while true; do
     printHelp
     exit 0
     ;;
+  -X | --request)
+    set -- -X # setup for failure
+    break
+    ;;
   --)
     shift
     break
     ;;
   esac
   shift
+done
+
+for arg in "$@"; do
+  case "$arg" in
+  -X* | --request*) printf '%s\n' "-X, --request not allowed in -XPOST mode. Quitting..." && exit 1 ;;
+  --) break ;; # in case we non-curl args after another separator...
+  esac
 done
 
 # check the obtained values
@@ -83,9 +95,8 @@ nuxeo_url=${nuxeo_url:-"localhost:8080"}
 $(printf '%s\n' "$doc_type" | properAndLowercase)
 EOF
 
-cmd=$(
-  cat <<EOF
-curl $@ -H "Content-type: application/json" "$NUXEO_CREDENTIALS" "$nuxeo_url/nuxeo/api/v1/path/default-domain/workspaces/$doc_path" -d "{
+cmd='curl $@ -H "Content-type: application/json" -u "${NUXEO_CREDENTIALS#-u}" "$nuxeo_url/nuxeo/api/v1/path/default-domain/workspaces/$doc_path" -d \"$payload\"'
+payload="{
     \"entity-type\": \"document\",
     \"name\":\"$doc_name\",
     \"type\": \"$doc_type\",
@@ -94,12 +105,6 @@ curl $@ -H "Content-type: application/json" "$NUXEO_CREDENTIALS" "$nuxeo_url/nux
         \"common:icon\": \"/icons/$doc_icon.gif\"
     }
 }"
-EOF
-)
 
-if [ -z "$silent" ]; then
-  printf '%s%s%s\n' "$(tput setaf 11)" "$cmd" "$(tput sgr0)" >&2
-fi
-if [ -z "$dry_run" ]; then
-  eval "$cmd"
-fi
+shout 5 "${_yel}$cmd${_grn}$payload"
+[ -z "$dry_run" ] && eval "$cmd"
