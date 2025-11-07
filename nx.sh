@@ -38,6 +38,8 @@ ${_mag}Environments:$_res
 
 ${_mag}COMMAND:$_res
   ${_yel}[ANYTHING_UNLISTED]$_res  Display contextual help.
+  ${_yel}cd$_res                   Go to your \$NUXEO_HOME
+  ${_yel}pd$_res                   Print \$NUXEO_HOME.
   ${_yel}console$_res              Perform nuxeoctl console.
   ${_yel}start$_res                Perform nuxeoctl start.
   ${_yel}stop$_res                 Perform nuxeoctl stop.
@@ -59,6 +61,12 @@ command=$1
 if [ -n "$1" ]; then shift; fi
 
 case "$command" in
+cd)
+  cd "$NUXEO_HOME"
+  ;;
+pd)
+  printf '%s\n' "$NUXEO_HOME"
+  ;;
 console | start | stop)
   "$NUXEO_HOME/bin/nuxeoctl" $command
   ;;
