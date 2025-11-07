@@ -24,27 +24,28 @@ $_cya        _-—  #t     :${_def}K#D#${_cya}E  iWf  i#K. >$_blu
                         fE
                          ,
 $_def
-                      v0.1.0$_res
+                    $_BLA ${_cya}v0.1.0 $_res
 
-Description:
-  Handy commands to run your Nuxeo and perform CRUD.
+${_mag}Description:$_res
+  Handy commands to run your Nuxeo and perform test CRUD.
 
-Usage:
-  $NAME [COMMAND [COMMAND_OPTION...] [COMMAND_ARG...]...]
+${_mag}Usage:$_res
+  $_yel$NAME [COMMAND [COMMAND_OPTION...] [COMMAND_ARG...]...]$_res
 
-Environments:
-  NUXEO_CTL            Path to nuxeoctl.
-  NUXEO_CREDENTIALS    Used by curl to authenticate.
+${_mag}Environments:$_res
+  ${_yel}NUXEO_HOME$_res           Absolute path to your unzipped nuxeo.
+  ${_yel}NUXEO_CREDENTIALS$_res    Used by curl to authenticate.
 
-Commands:
-  [ANYTHING_UNLISTED]  Display contextual help.
-  console              Perform $NUXEO_CTL console.
-  start                Perform $NUXEO_CTL start.
-  stop                 Perform $NUXEO_CTL stop.
-  create               Create a document.
-  batch                Init a batch, upload binaries, create corresponding docs.
+${_mag}COMMAND:$_res
+  ${_yel}[ANYTHING_UNLISTED]$_res  Display contextual help.
+  ${_yel}console$_res              Perform nuxeoctl console.
+  ${_yel}start$_res                Perform nuxeoctl start.
+  ${_yel}stop$_res                 Perform nuxeoctl stop.
+  ${_yel}post$_res                 Create a document.
+  ${_yel}get$_res                  Read a document.
+  ${_yel}batch$_res                Init a batch, upload binaries, create corresponding docs.
 
-Examples:
+${_mag}Examples:$_res
   # display help specific to the init subcommand of the batch subcommand.
   $NAME batch init help
   # start your Nuxeo instance in console mode
