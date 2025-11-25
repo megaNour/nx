@@ -57,6 +57,11 @@ while true; do
     doc_path=${2:?no doc path provided}
     shift
     ;;
+  -k | --key-value)
+    doc_key_values="$doc_key_values,
+        $2"
+    shift 2
+    ;;
   -t | --type)
     doc_type=$2
     shift
@@ -104,7 +109,7 @@ payload="{
     \"type\": \"$doc_type\",
     \"properties\": {
         \"dc:title\": \"$doc_name\",
-        \"common:icon\": \"/icons/$doc_icon.gif\"
+        \"common:icon\": \"/icons/$doc_icon.gif\"$doc_key_values
     }
 }"
 
