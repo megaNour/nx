@@ -2,9 +2,8 @@
 
 set -e
 
-export NAME=nx
+NAME=nx
 ENTRY=$(CDPATH="" cd -- "$(dirname "$0")" && pwd)
-export ENTRY
 
 printHelp() {
   cat <<EOF
@@ -76,6 +75,6 @@ console | start | stop)
 *)
   ENTRY=$(CDPATH="" cd -- "$(dirname "$0")" && pwd)
   . "$ENTRY/lib/shout/libshout.sh"
-  ENTRY=$ENTRY/$command . "$ENTRY/${command}.sh"
+  NAME="$NAME $command" ENTRY=$ENTRY/$command . "$ENTRY/${command}.sh"
   ;;
 esac

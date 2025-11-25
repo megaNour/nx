@@ -2,8 +2,6 @@
 
 set -e
 
-NAME="${NAME:-$0} batch"
-
 printHelp() {
   cat <<EOF
 Usage:
@@ -28,7 +26,7 @@ maybeHelp "$1"
 command=${1}.sh
 shift
 if [ -f "$ENTRY/$command" ]; then
-  . "$ENTRY/${command}" "$@"
+  NAME="$NAME $command" ENTRY=$ENTRY/$command . "$ENTRY/${command}" "$@"
 else
   printHelp
 fi
