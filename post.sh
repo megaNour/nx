@@ -54,7 +54,7 @@ while true; do
     shift
     ;;
   -p | --path)
-    doc_path=$2
+    doc_path=${2:?no doc path provided}
     shift
     ;;
   -t | --type)
