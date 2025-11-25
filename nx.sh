@@ -6,7 +6,7 @@ export NAME=nx
 ENTRY=$(CDPATH="" cd -- "$(dirname "$0")" && pwd)
 export ENTRY
 
-nxHelp() {
+printHelp() {
   cat <<EOF
 $bold$_blu
             L.
@@ -57,8 +57,11 @@ ${_mag}Examples:$_res
 EOF
 }
 
+. "$ENTRY/lib/shout/colors.sh"
+. "$ENTRY/utils/help.sh"
+
 command=$1
-if [ -n "$1" ]; then shift; fi
+shift
 
 case "$command" in
 cd)
@@ -68,17 +71,11 @@ pd)
   printf '%s\n' "$NUXEO_HOME"
   ;;
 console | start | stop)
-  "$NUXEO_HOME/bin/nuxeoctl" $command
+  "$NUXEO_HOME/bin/nuxeoctl" "$command"
   ;;
 *)
   ENTRY=$(CDPATH="" cd -- "$(dirname "$0")" && pwd)
-  . "$ENTRY/lib/shout/colors.sh"
   . "$ENTRY/lib/shout/libshout.sh"
-  command=$ENTRY/${command}.sh
-  if [ -f "$command" ]; then
-    . "$command"
-  else
-    nxHelp
-  fi
+  ENTRY=$ENTRY/$command . "$ENTRY/${command}.sh"
   ;;
 esac

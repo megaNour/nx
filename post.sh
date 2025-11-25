@@ -14,7 +14,7 @@ Environments:
 
 Options:
 
-  --  [CURL_OPTION...]             No -X, --request allowed. Already in -XPOST mode.
+  --  [CURL_OPTION...]             No -X|--request allowed. Already in -XPOST mode.
   -d, --dry-run, --dry[Rr]un       Do not execute the curl command
   -h, --help                       Show this help message and exit
   -n, --name --title NAME          Document name (title)
@@ -27,6 +27,8 @@ Examples:
 EOF
 }
 
+maybeHelp "$1"
+
 # Convert input to proper case and lowercase on two output lines per input line
 # Example: "fiLe" -> first line: "File", second line: "file"
 properAndLowercase() {
@@ -36,10 +38,14 @@ properAndLowercase() {
   }'
 }
 
-eval set -- "$(getopt -o dhn:p:t:u: -l dry-run,dryrun,dryRun,help,name:,path:,type:,url: -- "$@")"
+eval set -- "$(getopt -o dk:hn:p:t:u: -l dry-run,dryrun,dryRun,key-value:,help,name:,path:,type:,url: -- "$@")"
 
 while true; do
   case "$1" in
+  -h | --help)
+    printHelp
+    exit 0
+    ;;
   -d | --dry-run | --dry[Rr]un)
     dry_run=1
     ;;
@@ -58,10 +64,6 @@ while true; do
   -u | --url)
     nuxeo_url=$2
     shift
-    ;;
-  -h | --help)
-    printHelp
-    exit 0
     ;;
   -X | --request)
     set -- -X # setup for failure

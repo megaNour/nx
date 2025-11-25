@@ -14,7 +14,7 @@ Environments:
 
 Options:
 
-  --  [CURL_OPTION...]             No -X, --request allowed. Already in -XGET mode.
+  --  [CURL_OPTION...]             No -X|--request allowed. Already in -XGET mode.
   -d, --dry-run, --dry[Rr]un       Do not execute the curl command
   -h, --help                       Show this help message and exit
   -p, --path PATH                  Path relative to workspace root
@@ -25,10 +25,16 @@ Examples:
 EOF
 }
 
+maybeHelp "$1"
+
 eval set -- "$(getopt -o dhp:u: -l dry-run,dryrun,dryRun,help,path:,url: -- "$@")"
 
 while true; do
   case "$1" in
+  -h | --help)
+    printHelp
+    exit 0
+    ;;
   -d | --dry-run | --dry[Rr]un)
     dry_run=1
     ;;
@@ -39,10 +45,6 @@ while true; do
   -u | --url)
     nuxeo_url=${2:-$NUXEO_URL}
     shift
-    ;;
-  -h | --help)
-    printHelp
-    exit 0
     ;;
   -X | --request)
     set -- -X # setup for failure
