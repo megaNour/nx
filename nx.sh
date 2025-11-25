@@ -8,17 +8,17 @@ export ENTRY
 
 printHelp() {
   cat <<EOF
-$bold$_blu
+$_bol$_blu
             L.
             EW:        ,ft
             E##;       t#E
             E###t      t#E :KW,      L
             E#fE#f     t#E  ,#W:   ,KG
-$_cya         –   E#  D#G  $_def  t#t $_cya   ;#W. jWi —— – ° >$_blu
+$_cya         –   E#  D#G    t#t    ;#W. jWi —— – ° >$_blu
             E#t  f#E.  t#E    i#KED.
-$_cya -.|  .--  i#t $_def  t#K: t#E $_cya    L#W. ==— -$_blu
+$_cya -.|  .--  i#t   t#K: t#E     L#W. ==— -$_blu
             E#t    ;#W,t#E   .GKj#K.
-$_cya        _-—  #t     :${_def}K#D#${_cya}E  iWf  i#K. >$_blu
+$_cya        _-—  #t     :K#D#E  iWf  i#K. >$_blu
             E#t      .E##E LK:    t#E
             ..         G#E i       tDj
                         fE
