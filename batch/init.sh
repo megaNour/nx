@@ -51,7 +51,7 @@ done
 . "$ENTRY/utils/reject_forbidden_flags.sh"
 
 [ -n "$1" ] && provider=$1 && shift || :
-cmd="curl $@ -s -XPOST \"$NUXEO_CREDENTIALS\" \"$NUXEO_URL/nuxeo/api/v1/upload/new/${provider:-default}\" | jq -r .batchId"
+cmd="curl \"\$NUXEO_CREDENTIALS\" -XPOST $@ \"$NUXEO_URL/nuxeo/api/v1/upload/new/${provider:-default}\" | jq -r .batchId"
 
 shout 5 "$_yel$cmd"
-[ -z "$dry_run" ] && eval "$cmd" || :
+. "$ENTRY/utils/curl.sh"
