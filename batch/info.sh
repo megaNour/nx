@@ -10,15 +10,14 @@ Usage:
   $NAME [help|-h|--help]
 
 Environments:
-  NUXEO_URL            Example: "localhost:8080".
-  NUXEO_CREDENTIALS    Used by curl to authenticate you.
+  NUXEO_URL           Example: "localhost:8080".
+  NUXEO_CREDENTIALS   Used by curl to authenticate you.
   SHOUT_LEVEL >= 5    prints curl commands in yellow
 
 Options:
   --  [CURL_OPTION...]             No -X|--request allowed. Already in -XPOST mode.
   -d, --dry-run, --dry[Rr]un       Do not execute the curl command
   -h, --help                       Show this help message and exit
-  -p, --provider PROVIDER          Also known as upload handler
 
 Examples:
   $NAME -dp foo
@@ -30,7 +29,7 @@ maybeHelp "$1"
 args="$(getopt -o "d,h" -l "dryrun,dryRun,dry-run,help" -- "$@")"
 eval "set -- $args"
 
-while [ $# -gt 0 ]; do
+while true; do
   case "$1" in
   -h | --help)
     printHelp
@@ -38,17 +37,17 @@ while [ $# -gt 0 ]; do
     ;;
   -d | --dryrun | --dry-run | --dryRun)
     dry_run=1
-    shift
     ;;
   --)
     shift
     break
     ;;
   esac
+  shift
 done
 
 [ -n "$2" ] && infoHelp || : # make it clear we don't take a list of ids to query info for
 . "$ENTRY/utils/reject_forbidden_flags.sh"
 
-batch_id=${1:?missing batch id}
+batch_id=${1:?param 1: batch id required}
 doCurl "$NUXEO_URL/nuxeo/api/v1/upload/$batch_id" $*

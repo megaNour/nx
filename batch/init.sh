@@ -10,8 +10,8 @@ Usage:
   $NAME init [PROVIDER]
 
 Environments:
-  NUXEO_URL            Example: "localhost:8080".
-  NUXEO_CREDENTIALS    Used by curl to authenticate you.
+  NUXEO_URL           Example: "localhost:8080".
+  NUXEO_CREDENTIALS   Used by curl to authenticate you.
   SHOUT_LEVEL >= 5    prints curl commands in yellow
 
 Options:
@@ -30,7 +30,7 @@ maybeHelp "${1:-no}" # trigger help only if a help hint is given
 args="$(getopt -o "d,h" -l "dryrun,dryRun,dry-run,help" -- "$@")"
 eval "set -- $args"
 
-while [ $# -gt 0 ]; do
+while true; do
   case "$1" in
   -h | --help)
     printHelp
@@ -38,13 +38,13 @@ while [ $# -gt 0 ]; do
     ;;
   -d | --dryrun | --dry-run | --dryRun)
     dry_run=1
-    shift
     ;;
   --)
     shift
     break
     ;;
   esac
+  shift
 done
 
 [ -n "$2" ] && infoHelp || : # make it clear we don't take a list of ids to query info for
@@ -53,5 +53,4 @@ done
 [ -n "$1" ] && provider=$1 || :
 cmd="curl -u \"\$NUXEO_CREDENTIALS\" -XPOST${*:+ $*} \"$NUXEO_URL/nuxeo/api/v1/upload/new/${provider:-default}\""
 
-shout 5 "$_yel$cmd"
 doCurl "$cmd" $*

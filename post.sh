@@ -80,7 +80,7 @@ while true; do
   shift
 done
 
-. $ENTRY/utils/reject_forbidden_flags.sh
+. "$ENTRY/utils/reject_forbidden_flags.sh"
 
 # check the obtained values
 doc_type=${doc_type:-"File"}
