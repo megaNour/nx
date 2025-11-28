@@ -41,6 +41,11 @@ while true; do
   -d | --dry-run | --dry[Rr]un)
     dry_run=1
     ;;
+  -k | --key-value)
+    doc_key_values="$doc_key_values,
+      $2"
+    shift
+    ;;
   -n | --name)
     doc_name=$2
     shift
@@ -69,8 +74,8 @@ doc_name=${doc_name:-"my_test_$doc_type"}
 
 # normalize the doc_type and deduce doc_icon
 {
+  IFS= read # ignore the proper case
   IFS= read -r doc_type
-  IFS= read -r doc_icon
 } <<EOF
 $(printf '%s\n' "$doc_type" | properAndLowercase)
 EOF
@@ -81,7 +86,7 @@ payload="{
     \"name\":\"$doc_name\",
     \"type\": \"$doc_type\",
     \"properties\": {
-      $doc_properties
+      $doc_key_values
     }
 }"
 
