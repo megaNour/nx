@@ -26,8 +26,8 @@ maybeHelp "$1"
 
 command=${1}.sh
 shift
-if [ -f "$ENTRY/$command" ]; then
-  NAME="$NAME $command" ENTRY=$ENTRY/$command . "$ENTRY/${command}" "$@"
+if [ -f "$ENTRY/$COMMAND/$command" ]; then
+  NAME="$NAME $command" . "$ENTRY/$COMMAND/${command}" "$@"
 else
   printHelp
 fi
