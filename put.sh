@@ -39,7 +39,7 @@ properAndLowercase() {
 }
 
 # do it separately from eval or it will swallow any error code
-args="$(getopt -o dhn:p:t:u: -l dry-run,dryrun,dryRun,help,name:,path:,type:,url: -- "$@")"
+args="$(getopt -o dhn:p:t: -l dry-run,dryrun,dryRun,help,name:,path:,type: -- "$@")"
 eval "set -- $args"
 
 while true; do
@@ -63,10 +63,6 @@ while true; do
     doc_type=$2
     shift
     ;;
-  -u | --url)
-    nuxeo_url=$2
-    shift
-    ;;
   --)
     shift
     break
@@ -80,7 +76,6 @@ done
 # check the obtained values
 doc_type=${doc_type:-"File"}
 doc_name=${doc_name:-"my_test_$doc_type"}
-nuxeo_url=${nuxeo_url:-"localhost:8080"}
 
 # normalize the doc_type and deduce doc_icon
 {
@@ -90,7 +85,7 @@ nuxeo_url=${nuxeo_url:-"localhost:8080"}
 $(printf '%s\n' "$doc_type" | properAndLowercase)
 EOF
 
-cmd='-XPUT -H "Content-type: application/json" "$nuxeo_url/nuxeo/api/v1/path/default-domain/workspaces/$doc_path"'
+cmd="-XPUT -H \"Content-type: application/json\" \"$NUXEO_URL/nuxeo/api/v1/path/default-domain/workspaces/$doc_path\""
 payload="{
     \"entity-type\": \"document\",
     \"name\":\"$doc_name\",

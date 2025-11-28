@@ -18,7 +18,6 @@ Options:
   -d, --dry-run, --dry[Rr]un       Do not execute the curl command
   -h, --help                       Show this help message and exit
   -p, --path PATH                  Path relative to workspace root
-  -u, --url  URL                   Server URL
 
 Examples:
   $NAME -n my_doc -p my_workspace -t workspace -u localhost:8080
@@ -26,7 +25,7 @@ EOF
 }
 
 # do it separately from eval or it will swallow any error code
-args="$(getopt -o dhp:u: -l dry-run,dryrun,dryRun,help,path:,url: -- "$@")"
+args="$(getopt -o dhp: -l dry-run,dryrun,dryRun,help,path: -- "$@")"
 eval "set -- $args"
 
 while true; do
@@ -42,10 +41,6 @@ while true; do
     doc_path=$2
     shift
     ;;
-  -u | --url)
-    nuxeo_url=${2:-$NUXEO_URL}
-    shift
-    ;;
   --)
     shift
     break
@@ -56,7 +51,4 @@ done
 
 . "$ENTRY/utils/reject_forbidden_flags.sh"
 
-# check the obtained values
-nuxeo_url=u${nuxeo_url:-"localhost:8080"}
-
-doCurl "$nuxeo_url/nuxeo/api/v1/path/default-domain/workspaces/$doc_path" $*
+doCurl "$NUXEO_URL/nuxeo/api/v1/path/default-domain/workspaces/$doc_path" $*

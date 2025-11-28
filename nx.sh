@@ -76,6 +76,7 @@ console | start | stop)
   ENTRY=$(CDPATH="" cd -- "$(dirname "$0")" && pwd)
   . "$ENTRY/lib/shout/libshout.sh"
   . "$ENTRY/utils/curl.sh"
+  NUXEO_URL=${NUXEO_URL:-localhost:8080}
   NAME="$NAME $command" COMMAND=$command . "$ENTRY/${command}.sh"
   ;;
 esac
