@@ -90,7 +90,7 @@ nuxeo_url=${nuxeo_url:-"localhost:8080"}
 $(printf '%s\n' "$doc_type" | properAndLowercase)
 EOF
 
-cmd='curl $@ -XPUT -H "Content-type: application/json" -u "${NUXEO_CREDENTIALS#-u}" "$nuxeo_url/nuxeo/api/v1/path/default-domain/workspaces/$doc_path" -d \"$payload\"'
+cmd='-XPUT -H "Content-type: application/json" "$nuxeo_url/nuxeo/api/v1/path/default-domain/workspaces/$doc_path"'
 payload="{
     \"entity-type\": \"document\",
     \"name\":\"$doc_name\",
@@ -100,5 +100,4 @@ payload="{
     }
 }"
 
-shout 5 "${_yel}$cmd${_grn}$payload"
-[ -z "$dry_run" ] && eval "$cmd" || :
+doCurlP "$cmd" "$payload" $*

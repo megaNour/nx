@@ -61,7 +61,4 @@ done
 # check the obtained values
 nuxeo_url=u${nuxeo_url:-"localhost:8080"}
 
-cmd='curl $@ -u "${NUXEO_CREDENTIALS#-u}" "$nuxeo_url/nuxeo/api/v1/path/default-domain/workspaces/$doc_path"'
-
-shout 5 "${_yel}$cmd"
-[ -z "$dry_run" ] && eval "$cmd" || :
+doCurl "$nuxeo_url/nuxeo/api/v1/path/default-domain/workspaces/$doc_path" $*

@@ -50,8 +50,8 @@ done
 [ -n "$2" ] && infoHelp || : # make it clear we don't take a list of ids to query info for
 . "$ENTRY/utils/reject_forbidden_flags.sh"
 
-[ -n "$1" ] && provider=$1 && shift || :
-cmd="curl \"\$NUXEO_CREDENTIALS\" -XPOST $@ \"$NUXEO_URL/nuxeo/api/v1/upload/new/${provider:-default}\" | jq -r .batchId"
+[ -n "$1" ] && provider=$1 || :
+cmd="curl -u \"\$NUXEO_CREDENTIALS\" -XPOST${*:+ $*} \"$NUXEO_URL/nuxeo/api/v1/upload/new/${provider:-default}\""
 
 shout 5 "$_yel$cmd"
-. "$ENTRY/utils/curl.sh"
+doCurl "$cmd" $*

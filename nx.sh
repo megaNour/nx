@@ -75,6 +75,7 @@ console | start | stop)
 *)
   ENTRY=$(CDPATH="" cd -- "$(dirname "$0")" && pwd)
   . "$ENTRY/lib/shout/libshout.sh"
+  . "$ENTRY/utils/curl.sh"
   NAME="$NAME $command" COMMAND=$command . "$ENTRY/${command}.sh"
   ;;
 esac
