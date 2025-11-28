@@ -12,21 +12,43 @@ Usage:
 Environments:
   NUXEO_URL            Example: "localhost:8080".
   NUXEO_CREDENTIALS    Used by curl to authenticate you.
+  SHOUT_LEVEL >= 5    prints curl commands in yellow
+
+Options:
+  --  [CURL_OPTION...]             No -X|--request allowed. Already in -XPOST mode.
+  -d, --dry-run, --dry[Rr]un       Do not execute the curl command
+  -h, --help                       Show this help message and exit
+  -p, --provider PROVIDER          Also known as upload handler
+
+Examples:
+  $NAME -dp foo
 EOF
 }
 
 maybeHelp "$1"
 
-if [ -n "$2" ]; then
-  infoHelp
-else
-  batch_id=${1:-help}
-  case "$batch_id" in
-  help | -h | --help)
-    infoHelp
+args="$(getopt -o "d,h" -l "dryrun,dryRun,dry-run,help" -- "$@")"
+eval "set -- $args"
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+  -h | --help)
+    printHelp
+    exit 0
     ;;
-  *)
-    curl "$NUXEO_CREDENTIALS" "$NUXEO_URL/nuxeo/api/v1/upload/$batch_id"
+  -d | --dryrun | --dry-run | --dryRun)
+    dry_run=1
+    shift
+    ;;
+  --)
+    shift
+    break
     ;;
   esac
-fi
+done
+
+[ -n "$2" ] && infoHelp || : # make it clear we don't take a list of ids to query info for
+. "$ENTRY/utils/reject_forbidden_flags.sh"
+
+batch_id=${1:?missing batch id}
+doCurl "$NUXEO_URL/nuxeo/api/v1/upload/$batch_id" $*
