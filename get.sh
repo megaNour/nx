@@ -11,9 +11,9 @@ Usage: $NAME [OPTIONS] [-- [CURL_OPTION...]]
 Environments:
   NUXEO_URL
   NUXEO_CREDENTIALS   in a <id>:<pwd>
+  SHOUT_LEVEL >= 5    prints curl commands in yellow
 
 Options:
-
   --  [CURL_OPTION...]             No -X|--request allowed. Already in -XGET mode.
   -d, --dry-run, --dry[Rr]un       Do not execute the curl command
   -h, --help                       Show this help message and exit

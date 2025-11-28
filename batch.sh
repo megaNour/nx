@@ -23,6 +23,7 @@ EOF
 }
 
 maybeHelp "$1"
+
 command=${1}.sh
 shift
 if [ -f "$ENTRY/$command" ]; then

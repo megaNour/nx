@@ -14,7 +14,7 @@ Environments:
   SHOUT_LEVEL >= 5    prints curl commands in yellow
 
 Options:
-  --  [CURL_OPTION...]             No -X|--request allowed. Already in -XPOST mode.
+  --  [CURL_OPTION...]             No -X|--request allowed. Already in -XPUT mode.
   -d, --dry-run, --dry[Rr]un       Do not execute the curl command
   -h, --help                       Show this help message and exit
   -n, --name --title NAME          Document name (title)
@@ -38,7 +38,7 @@ properAndLowercase() {
   }'
 }
 
-eval set -- "$(getopt -o dk:hn:p:t:u: -l dry-run,dryrun,dryRun,key-value:,help,name:,path:,type:,url: -- "$@")"
+eval set -- "$(getopt -o dhn:p:t:u: -l dry-run,dryrun,dryRun,help,name:,path:,type:,url: -- "$@")"
 
 while true; do
   case "$1" in
@@ -54,13 +54,8 @@ while true; do
     shift
     ;;
   -p | --path)
-    doc_path=${2:?no doc path provided}
+    doc_path=$2
     shift
-    ;;
-  -k | --key-value)
-    doc_key_values="$doc_key_values,
-        $2"
-    shift 2
     ;;
   -t | --type)
     doc_type=$2
@@ -84,7 +79,7 @@ done
 
 for arg in "$@"; do
   case "$arg" in
-  -X* | --request*) printf '%s\n' "-X, --request not allowed in -XPOST mode. Quitting..." && exit 1 ;;
+  -X* | --request*) printf '%s\n' "-X, --request not allowed in -XPUT mode. Quitting..." && exit 1 ;;
   --) break ;; # in case we non-curl args after another separator...
   esac
 done
@@ -102,14 +97,13 @@ nuxeo_url=${nuxeo_url:-"localhost:8080"}
 $(printf '%s\n' "$doc_type" | properAndLowercase)
 EOF
 
-cmd='curl $@ -H "Content-type: application/json" -u "${NUXEO_CREDENTIALS#-u}" "$nuxeo_url/nuxeo/api/v1/path/default-domain/workspaces/$doc_path" -d \"$payload\"'
+cmd='curl $@ -XPUT -H "Content-type: application/json" -u "${NUXEO_CREDENTIALS#-u}" "$nuxeo_url/nuxeo/api/v1/path/default-domain/workspaces/$doc_path" -d \"$payload\"'
 payload="{
     \"entity-type\": \"document\",
     \"name\":\"$doc_name\",
     \"type\": \"$doc_type\",
     \"properties\": {
-        \"dc:title\": \"$doc_name\",
-        \"common:icon\": \"/icons/$doc_icon.gif\"$doc_key_values
+      $doc_properties
     }
 }"
 
