@@ -114,4 +114,4 @@ payload="{
 }"
 
 shout 5 "${_yel}$cmd${_grn}$payload"
-[ -z "$dry_run" ] && eval "$cmd"
+[ -z "$dry_run" ] && eval "$cmd" || :
