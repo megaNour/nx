@@ -25,7 +25,9 @@ Examples:
 EOF
 }
 
-eval "set -- $(getopt -o dhp:u: -l dry-run,dryrun,dryRun,help,path:,url: -- "$@")"
+# do it separately from eval or it will swallow any error code
+args="$(getopt -o dhp:u: -l dry-run,dryrun,dryRun,help,path:,url: -- "$@")"
+eval "set -- $args"
 
 while true; do
   case "$1" in
@@ -56,12 +58,7 @@ while true; do
   shift
 done
 
-for arg in "$@"; do
-  case "$arg" in
-  -X* | --request*) printf '%s\n' "-X, --request not allowed in -XDELETE mode. Quitting..." && exit 1 ;;
-  --) break ;; # in case we non-curl args after another separator...
-  esac
-done
+. "$ENTRY/utils/reject_forbidden_flags.sh"
 
 # check the obtained values
 nuxeo_url=u${nuxeo_url:-"localhost:8080"}

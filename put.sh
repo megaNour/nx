@@ -38,7 +38,9 @@ properAndLowercase() {
   }'
 }
 
-eval "set -- $(getopt -o dhn:p:t:u: -l dry-run,dryrun,dryRun,help,name:,path:,type:,url: -- "$@")"
+# do it separately from eval or it will swallow any error code
+args="$(getopt -o dhn:p:t:u: -l dry-run,dryrun,dryRun,help,name:,path:,type:,url: -- "$@")"
+eval "set -- $args"
 
 while true; do
   case "$1" in
@@ -65,10 +67,6 @@ while true; do
     nuxeo_url=$2
     shift
     ;;
-  -X | --request)
-    set -- -X # setup for failure
-    break
-    ;;
   --)
     shift
     break
@@ -77,12 +75,7 @@ while true; do
   shift
 done
 
-for arg in "$@"; do
-  case "$arg" in
-  -X* | --request*) printf '%s\n' "-X, --request not allowed in -XPUT mode. Quitting..." && exit 1 ;;
-  --) break ;; # in case we non-curl args after another separator...
-  esac
-done
+. "$ENTRY/utils/reject_forbidden_flags.sh"
 
 # check the obtained values
 doc_type=${doc_type:-"File"}
