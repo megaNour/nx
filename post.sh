@@ -38,7 +38,7 @@ properAndLowercase() {
   }'
 }
 
-eval set -- "$(getopt -o dk:hn:p:t:u: -l dry-run,dryrun,dryRun,key-value:,help,name:,path:,type:,url: -- "$@")"
+eval "set -- $(getopt -o dk:hn:p:t:u: -l dry-run,dryrun,dryRun,key-value:,help,name:,path:,type:,url: -- "$@")"
 
 while true; do
   case "$1" in

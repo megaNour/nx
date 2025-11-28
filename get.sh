@@ -27,7 +27,7 @@ EOF
 
 maybeHelp "$1"
 
-eval set -- "$(getopt -o dhp:u: -l dry-run,dryrun,dryRun,help,path:,url: -- "$@")"
+eval "set -- $(getopt -o dhp:u: -l dry-run,dryrun,dryRun,help,path:,url: -- "$@")"
 
 while true; do
   case "$1" in
