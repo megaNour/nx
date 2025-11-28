@@ -1,4 +1,4 @@
-#!/usr/bin/env dash
+#!/bin/sh
 
 curl "-u$NEXUS_USERNAME:$NEXUS_PASSWORD" https://packages.nuxeo.com/repository/maven-team-platform-private/org/nuxeo/ecm/distribution/nuxeo-server-tomcat/2023.0.159/nuxeo-server-tomcat-2023.0.159.zip -O
 unzip nuxeo-server-tomcat-2023.0.159.zip
