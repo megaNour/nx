@@ -48,7 +48,7 @@ while true; do
 done
 
 [ -n "$2" ] && infoHelp || : # make it clear we don't take a list of ids to query info for
-. "$ENTRY/utils/reject_forbidden_flags.sh"
+rejectForbiddenFlags "$@"
 
 [ -n "$1" ] && provider=$1 || :
 cmd="-XPOST${*:+ $*} \"$NUXEO_URL/nuxeo/api/v1/upload/new/${provider:-default}\""

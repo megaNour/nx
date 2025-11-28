@@ -57,7 +57,14 @@ EOF
 }
 
 . "$ENTRY/lib/shout/colors.sh"
-. "$ENTRY/utils/help.sh"
+. "$ENTRY/utils/_autosource.sh"
+
+for f in "$ENTRY/utils/"*; do
+  case "$f" in */utils/_*) continue ;; esac
+  _autosource "$f" "$ENTRY/utils"
+done
+
+maybeHelp "$1"
 
 command=$1
 shift
@@ -75,7 +82,6 @@ console | start | stop)
 *)
   ENTRY=$(CDPATH="" cd -- "$(dirname "$0")" && pwd)
   . "$ENTRY/lib/shout/libshout.sh"
-  . "$ENTRY/utils/curl.sh"
   NUXEO_URL=${NUXEO_URL:-localhost:8080}
   NAME="$NAME $command" COMMAND=$command . "$ENTRY/${command}.sh"
   ;;

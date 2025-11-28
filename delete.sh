@@ -49,6 +49,6 @@ while true; do
   shift
 done
 
-. "$ENTRY/utils/reject_forbidden_flags.sh"
+rejectForbiddenFlags "$@"
 
 doCurl "$NUXEO_URL/nuxeo/api/v1/path/default-domain/workspaces/$doc_path" $*

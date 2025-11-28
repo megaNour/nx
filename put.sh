@@ -9,34 +9,24 @@ printHelp() {
 Usage: $NAME [OPTIONS] [-- [CURL_OPTION...]]
 
 Environments:
-  NUXEO_URL
-  NUXEO_CREDENTIALS   in a <id>:<pwd>
-  SHOUT_LEVEL >= 5    prints curl commands in yellow
+NUXEO_URL
+NUXEO_CREDENTIALS   in a <id>:<pwd>
+SHOUT_LEVEL >= 5    prints curl commands in yellow
 
 Options:
-  --  [CURL_OPTION...]             No -X|--request allowed. Already in -XPUT mode.
-  -d, --dry-run, --dry[Rr]un       Do not execute the curl command
-  -h, --help                       Show this help message and exit
-  -n, --name --title NAME          Document name (title)
-  -p, --path PATH                  Path relative to workspace root
-  -t, --type TYPE                  Document type
-  -u, --url  URL                   Server URL
+--  [CURL_OPTION...]             No -X|--request allowed. Already in -XPUT mode.
+-d, --dry-run, --dry[Rr]un       Do not execute the curl command
+-h, --help                       Show this help message and exit
+-n, --name --title NAME          Document name (title)
+-p, --path PATH                  Path relative to workspace root
+-t, --type TYPE                  Document type
 
 Examples:
-  $NAME -n my_doc -p my_workspace -t workspace -u localhost:8080
+$NAME -n my_doc -p my_workspace -t workspace -u localhost:8080
 EOF
 }
 
 maybeHelp "$1"
-
-# Convert input to proper case and lowercase on two output lines per input line
-# Example: "fiLe" -> first line: "File", second line: "file"
-properAndLowercase() {
-  awk '{
-    print toupper(substr($0,1,1)) tolower(substr($0,2))
-    print tolower($0)
-  }'
-}
 
 # do it separately from eval or it will swallow any error code
 args="$(getopt -o dhn:p:t: -l dry-run,dryrun,dryRun,help,name:,path:,type: -- "$@")"
@@ -71,7 +61,7 @@ while true; do
   shift
 done
 
-. "$ENTRY/utils/reject_forbidden_flags.sh"
+rejectForbiddenFlags "$@"
 
 # check the obtained values
 doc_type=${doc_type:-"File"}

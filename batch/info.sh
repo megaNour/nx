@@ -47,7 +47,7 @@ while true; do
 done
 
 [ -n "$2" ] && infoHelp || : # make it clear we don't take a list of ids to query info for
-. "$ENTRY/utils/reject_forbidden_flags.sh"
+rejectForbiddenFlags "$@"
 
 batch_id=${1:?param 1: batch id required}
 doCurl "$NUXEO_URL/nuxeo/api/v1/upload/$batch_id" $*

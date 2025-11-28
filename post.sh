@@ -28,15 +28,6 @@ EOF
 
 maybeHelp "$1"
 
-# Convert input to proper case and lowercase on two output lines per input line
-# Example: "fiLe" -> first line: "File", second line: "file"
-properAndLowercase() {
-  awk '{
-    print toupper(substr($0,1,1)) tolower(substr($0,2))
-    print tolower($0)
-  }'
-}
-
 # do it separately from eval or it will swallow any error code
 args=$(getopt -o dk:hn:p:t: -l dry-run,dryrun,dryRun,key-value:,help,name:,path:,type: -- "$@")
 eval "set -- $args"
@@ -75,7 +66,7 @@ while true; do
   shift
 done
 
-. "$ENTRY/utils/reject_forbidden_flags.sh"
+rejectForbiddenFlags "$@"
 
 # check the obtained values
 doc_type=${doc_type:-"File"}
