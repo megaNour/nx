@@ -51,6 +51,6 @@ done
 . "$ENTRY/utils/reject_forbidden_flags.sh"
 
 [ -n "$1" ] && provider=$1 || :
-cmd="curl -u \"\$NUXEO_CREDENTIALS\" -XPOST${*:+ $*} \"$NUXEO_URL/nuxeo/api/v1/upload/new/${provider:-default}\""
+cmd="-XPOST${*:+ $*} \"$NUXEO_URL/nuxeo/api/v1/upload/new/${provider:-default}\""
 
 doCurl "$cmd" $*
