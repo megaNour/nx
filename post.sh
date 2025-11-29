@@ -18,6 +18,7 @@ Options:
   --  [CURL_OPTION...]             No -X|--request allowed. Already in -XPOST mode.
   -d, --dry-run, --dry[Rr]un       Do not execute the curl command
   -h, --help                       Show this help message and exit
+  -p, --path PATH                  Existing Parent path relative to workspace root
   -n, --name --title NAME          Document name (title)
   -t, --type TYPE                  Document type
   -k, --key-value [JSON_KV]        Repeatably add a key:value pair, must be stringified.
@@ -50,6 +51,10 @@ while true; do
         $2"
     shift
     ;;
+  -p | --path)
+    doc_path=$2
+    shift
+    ;;
   -t | --type)
     doc_type=$2
     shift
@@ -64,9 +69,6 @@ while true; do
 done
 
 rejectForbiddenFlags "$@"
-
-doc_path=${1:?${_red}param 1: missing required doc path from \'/default-doman/workspaces/\'.$_def}
-shift
 
 # check the obtained values
 doc_type=${doc_type:-"File"}
