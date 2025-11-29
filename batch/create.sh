@@ -2,7 +2,28 @@
 
 printHelp() {
   cat <<EOF
-this is the create help
+Description:
+  Creates Document(s) with the given BATCH_ID [FILE_INDEX].
+
+Usage:
+  $NAME BATCH_ID [FILE_INDEX]
+
+  BATCH_ID     A Nuxeo batch id. You can get one with ${NAME% *} init.
+  FILE_INDEX   If provided, only this file will be used in the operation.
+
+Environments:
+  NUXEO_URL           Example: "localhost:8080".
+  NUXEO_CREDENTIALS   Used by curl to authenticate you.
+  SHOUT_LEVEL >= 5    prints curl
+
+Options:
+  --  [CURL_OPTION...]              No -X|--request allowed. Already in -XPOST mode.
+  -d, --dry-run, --dry[Rr]un        Do not execute the curl command.
+  -h, --help                        Show this help message and exit.
+  -i, --index, --file-[idx|index]   A file index to scope the operation to.
+
+Examples:
+  $NAME batchId-... 0 # only use file 0 of batchId-...
 EOF
 }
 
