@@ -19,7 +19,6 @@ Options:
   -d, --dry-run, --dry[Rr]un       Do not execute the curl command
   -h, --help                       Show this help message and exit
   -n, --name --title NAME          Document name (title)
-  -p, --path PATH                  Path relative to workspace root
   -t, --type TYPE                  Document type
   -k, --key-value [JSON_KV]        Repeatably add a key:value pair, must be stringified.
                                      i.e. "\"my:key\": \"my_value\""
@@ -46,10 +45,6 @@ while true; do
     doc_name=$2
     shift
     ;;
-  -p | --path)
-    doc_path=${2:?no doc path provided}
-    shift
-    ;;
   -k | --key-value)
     doc_key_values="$doc_key_values,
         $2"
@@ -69,6 +64,9 @@ while true; do
 done
 
 rejectForbiddenFlags "$@"
+
+doc_path=${1:?${_red}param 1: missing required doc path from \'/default-doman/workspaces/\'.$_def}
+shift
 
 # check the obtained values
 doc_type=${doc_type:-"File"}
