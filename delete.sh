@@ -25,7 +25,7 @@ EOF
 }
 
 # do it separately from eval or it will swallow any error code
-args="$(getopt -o ${G_global_short_flags}hp: -l $G_global_long_flags,help,path: -- "$@")"
+args="$(getopt -o ${G_global_short_flags}h -l $G_global_long_flags,help -- "$@")"
 eval "set -- $args"
 
 while true; do
@@ -33,10 +33,6 @@ while true; do
   -h | --help)
     printHelp
     exit 0
-    ;;
-  -p | --path)
-    doc_path=$2
-    shift
     ;;
   --)
     shift
@@ -49,4 +45,7 @@ done
 
 rejectForbiddenFlags "$@"
 
-doCurl "$NUXEO_URL/nuxeo/api/v1/path/default-domain/workspaces/$doc_path" $*
+target=${1?${_red}param 1: missing target to delete. Pass an empty string if you want to nuke everything under \'/default-domain/workspaces/\'$_def}
+shift
+
+doCurl "-XDELETE $NUXEO_URL/nuxeo/api/v1/path/default-domain/workspaces/$target" $*

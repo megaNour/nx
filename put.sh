@@ -29,7 +29,7 @@ EOF
 maybeHelp "$1"
 
 # do it separately from eval or it will swallow any error code
-args="$(getopt -o ${G_global_short_flags}hn:p:t: -l $G_global_long_flags,help,name:,path:,type: -- "$@")"
+args="$(getopt -o ${G_global_short_flags}hk:n:p:t: -l $G_global_long_flags,help,key-value:,name:,path:,type: -- "$@")"
 eval "set -- $args"
 
 while true; do
@@ -39,16 +39,12 @@ while true; do
     exit 0
     ;;
   -k | --key-value)
-    doc_key_values="$doc_key_values,
+    doc_key_values="${doc_key_values+$doc_key_values,}
       $2"
     shift
     ;;
   -n | --name)
     doc_name=$2
-    shift
-    ;;
-  -p | --path)
-    doc_path=$2
     shift
     ;;
   -t | --type)
@@ -66,25 +62,27 @@ done
 
 rejectForbiddenFlags "$@"
 
+target=${1:?param 1: ${_red}missing path to document to update.$_def}
+shift
+
 # check the obtained values
 doc_type=${doc_type:-"File"}
 doc_name=${doc_name:-"my_test_$doc_type"}
 
 # normalize the doc_type and deduce doc_icon
 {
-  IFS= read # ignore the proper case
   IFS= read -r doc_type
+  IFS= read # ignore the proper case
 } <<EOF
 $(printf '%s\n' "$doc_type" | properAndLowercase)
 EOF
 
-cmd="-XPUT -H \"Content-type: application/json\" \"$NUXEO_URL/nuxeo/api/v1/path/default-domain/workspaces/$doc_path\""
+cmd="-XPUT -H \"Content-type: application/json\" \"$NUXEO_URL/nuxeo/api/v1/path/default-domain/workspaces/$target\" -d"
 payload="{
     \"entity-type\": \"document\",
     \"name\":\"$doc_name\",
     \"type\": \"$doc_type\",
-    \"properties\": {
-      $doc_key_values
+    \"properties\": {$doc_key_values
     }
 }"
 

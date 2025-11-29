@@ -27,7 +27,7 @@ EOF
 maybeHelp "$1"
 
 # do it separately from eval or it will swallow any error code
-args="$(getopt -o dhp: -l dry-run,dryrun,dryRun,help,path: -- "$@")"
+args="$(getopt -o "dh" -l "dry-run,dryrun,dryRun,help" -- "$@")"
 eval "set -- $args"
 
 while true; do
@@ -35,10 +35,6 @@ while true; do
   -h | --help)
     printHelp
     exit 0
-    ;;
-  -p | --path)
-    doc_path=$2
-    shift
     ;;
   --)
     shift
@@ -50,5 +46,7 @@ while true; do
 done
 
 rejectForbiddenFlags "$@"
+target=${1?${_red}param 1: missing target to get from \'/default-domain/workspaces/\'$_def}
+shift
 
-doCurl "$NUXEO_URL/nuxeo/api/v1/path/default-domain/workspaces/$doc_path" $*
+doCurl "$NUXEO_URL/nuxeo/api/v1/path/default-domain/workspaces/$target" $*
