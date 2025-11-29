@@ -36,9 +36,6 @@ while true; do
     printHelp
     exit 0
     ;;
-  -d | --dry-run | --dry[Rr]un)
-    dry_run=1
-    ;;
   -p | --path)
     doc_path=$2
     shift
@@ -47,6 +44,7 @@ while true; do
     shift
     break
     ;;
+  *) ;; # ignore unhandled flags without error and clear $@ from them
   esac
   shift
 done

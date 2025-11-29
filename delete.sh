@@ -25,7 +25,7 @@ EOF
 }
 
 # do it separately from eval or it will swallow any error code
-args="$(getopt -o dhp: -l dry-run,dryrun,dryRun,help,path: -- "$@")"
+args="$(getopt -o ${G_global_short_flags}hp: -l $G_global_long_flags,help,path: -- "$@")"
 eval "set -- $args"
 
 while true; do
@@ -33,9 +33,6 @@ while true; do
   -h | --help)
     printHelp
     exit 0
-    ;;
-  -d | --dry-run | --dry[Rr]un)
-    dry_run=1
     ;;
   -p | --path)
     doc_path=$2
@@ -45,6 +42,7 @@ while true; do
     shift
     break
     ;;
+  *) ;; # ignore unhandled flags without error and clear $@ from them
   esac
   shift
 done
