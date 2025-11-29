@@ -7,7 +7,7 @@ Description:
   Then, you can call "${NAME% *} upload" to send files.
 
 Usage:
-  $NAME init [PROVIDER]
+  $NAME [PROVIDER]
 
 Environments:
   NUXEO_URL           Example: "localhost:8080".
