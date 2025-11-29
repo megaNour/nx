@@ -32,6 +32,8 @@ while true; do
 done
 
 target=${1:?${_red}param 2: file path from /default-domain/workspaces/ required.$_def}
+rejectForbiddenFlags "$@"
+
 batch_id=${2:?${_red}param 1: batch Id required. Consider using $($NAME init)$_def}
 shift 2
 

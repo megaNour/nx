@@ -40,6 +40,8 @@ while true; do
   shift
 done
 
+rejectForbiddenFlags "$@"
+
 batch_id=${1:?${_red}param 1: batch Id required. Consider using ${NAME% *} init$_def}
 file_index=${2:?${_red}param 2: file index in the batch required$_def}
 file=${3:?${_red}param 3: file location required.$_def}
