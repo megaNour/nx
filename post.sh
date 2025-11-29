@@ -6,7 +6,8 @@ NAME=${NAME:-$0}
 
 printHelp() {
   cat <<EOF
-Usage: $NAME [OPTIONS] [-- [CURL_OPTION...]]
+Usage: $NAME [OPTIONS] DOC_PATH [-- [CURL_OPTION...]]
+  DOC_PATH   target doc location from '/default-domain/workspaces/'.
 
 Environments:
   NUXEO_URL
@@ -20,6 +21,9 @@ Options:
   -n, --name --title NAME          Document name (title)
   -p, --path PATH                  Path relative to workspace root
   -t, --type TYPE                  Document type
+  -k, --key-value [JSON_KV]        Repeatably add a key:value pair, must be stringified.
+                                     i.e. "\"my:key\": \"my_value\""
+
 
 Examples:
   $NAME -n my_doc -p my_workspace -t workspace -u localhost:8080

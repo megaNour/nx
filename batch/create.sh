@@ -31,9 +31,9 @@ while true; do
   shift
 done
 
-target=${1:?${_red}param 2: file path from /default-domain/workspaces/ required.$_def}
 rejectForbiddenFlags "$@"
 
+target=${1:?${_red}param 2: missing required file path from \'/default-domain/workspaces/\'.$_def}
 batch_id=${2:?${_red}param 1: batch Id required. Consider using $($NAME init)$_def}
 shift 2
 
