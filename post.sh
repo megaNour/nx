@@ -80,7 +80,7 @@ doc_name=${doc_name:-"my_test_$doc_type"}
 $(printf '%s\n' "$doc_type" | properAndLowercase)
 EOF
 
-cmd="-H \"Content-type: application/json\"  \"$NUXEO_URL/nuxeo/api/v1/path/default-domain/workspaces/$doc_path\""
+cmd="-H \"Content-type: application/json\"  \"$NUXEO_URL/nuxeo/api/v1/path/default-domain/workspaces/$doc_path\" -d"
 payload="{
     \"entity-type\": \"document\",
     \"name\":\"$doc_name\",

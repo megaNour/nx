@@ -3,7 +3,7 @@
 doCurlP() {
   cmd=$1 && payload=$2 && shift 2
 
-  shout 5 "${_yel}curl -u \"\$NUXEO_CREDENTIALS\"${*:+ $*} $cmd -d
+  shout 5 "${_yel}curl -u \"\$NUXEO_CREDENTIALS\"${*:+ $*} $cmd
 ${_grn}$payload"
-  [ -z "$dry_run" ] && eval "curl -u \"${NUXEO_CREDENTIALS#-u}\"${*:+ $*} ${cmd##*_CREDENTIALS\" } -d $payload" || :
+  [ -z "$dry_run" ] && eval "curl -u \"${NUXEO_CREDENTIALS#-u}\"${*:+ $*} ${cmd##*_CREDENTIALS\" } \"\$payload\"" || :
 }
