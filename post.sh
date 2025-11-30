@@ -84,10 +84,7 @@ sanitizePathSegment doc_path # if a value was given, we still need to sanitize
 doc_path=${doc_path%/}       # in this case we don't need the trailing '/'
 
 sanitizePathSegment repo_id
-case "$repo_id" in
-/) unset repo_id ;;
-*/) repo_id=repo/$repo_id ;;
-esac
+[ -n "$repo_id" ] && repo_id=repo/$repo_id || :
 
 # normalize the doc_type and deduce doc_icon
 {

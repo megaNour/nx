@@ -9,7 +9,10 @@ sanitizePathSegment() {
   else
     while true; do
       case "$_sanPS_base_path" in
-      /) break ;;                                    # fine
+      /)
+        unset _sanPS_base_path # we don't want to return a dangling '/'
+        break
+        ;;
       /*/) _sanPS_base_path=${_sanPS_base_path#/} ;; # remove leader
       /*) _sanPS_base_path=${_sanPS_base_path#/}/ ;; # remove leader and add a trailer
       *//) _sanPS_base_path=${_sanPS_base_path%/} ;; # remove multi-trailer
