@@ -20,10 +20,10 @@ Options:
   -h, --help                       Show this help message and exit.
   -p, --path PATH                  Replace default path prefix.
   -n, --name --title NAME          Specify the document title. (otherwise same as path name)
+  -r, --repo --repo-id REPO_ID     Target a specific repository.
   -t, --type TYPE                  Document type.
   -k, --key-value [JSON_KV]        Repeatably add a key:value pair, must be stringified.
                                      i.e. "\"my:key\": \"my_value\""
-
 
 Examples:
   $NAME -n my_doc -p my_workspace -t workspace -u localhost:8080
@@ -33,7 +33,7 @@ EOF
 maybeHelp "$@"
 
 # do it separately from eval or it will swallow any error code
-args=$(getopt -o ${G_global_short_flags}k:hn:p:t: -l $G_global_long_flags,key-value:,help,name:,path:,type: -- "$@")
+args=$(getopt -o ${G_global_short_flags}k:hn:p:r:t: -l $G_global_long_flags,key-value:,help,name:,path:,repo:,repo-id:,type: -- "$@")
 eval "set -- $args"
 
 while true; do
@@ -53,6 +53,10 @@ while true; do
     ;;
   -p | --path)
     doc_path=$2
+    shift
+    ;;
+  -r | --repo | --repo-id)
+    repo_id=$2
     shift
     ;;
   -t | --type)
@@ -81,6 +85,12 @@ doc_path=${doc_path-"default-domain/workspaces/"} # we put the trailing '/' to a
 sanitizePathSegment doc_path # if a value was given, we still need to sanitize
 doc_path=${doc_path%/}       # in this case we don't need the trailing '/'
 
+sanitizePathSegment repo_id
+case "$repo_id" in
+/) unset repo_id ;;
+*/) repo_id=repo/$repo_id ;;
+esac
+
 # normalize the doc_type and deduce doc_icon
 {
   IFS= read -r doc_type
@@ -89,7 +99,7 @@ doc_path=${doc_path%/}       # in this case we don't need the trailing '/'
 $(printf '%s\n' "$doc_type" | properAndLowercase)
 EOF
 
-cmd="-H \"Content-type: application/json\"  \"$NUXEO_URL/nuxeo/api/v1$repo_id/path/$doc_path\" -d"
+cmd="-H \"Content-type: application/json\"  \"$NUXEO_URL/nuxeo/api/v1/${repo_id}path/$doc_path\" -d"
 payload="{
     \"entity-type\": \"document\",
     \"name\":\"$target\",
