@@ -4,7 +4,7 @@ set -e
 
 printHelp() {
   cat <<EOF
-Usage: $NAME [OPTIONS] TARGET [-- [CURL_OPTION...]]
+Usage: $NAME [OPTION...] TARGET [-- [CURL_OPTION...]]
   TARGET   target doc path last segment. By default prefixed '/default-domain/workspaces/'.
 
 Environments:

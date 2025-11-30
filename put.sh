@@ -7,20 +7,21 @@ printHelp() {
 Usage: $NAME [OPTIONS] [-- [CURL_OPTION...]]
 
 Environments:
-NUXEO_URL
-NUXEO_CREDENTIALS   in a <id>:<pwd>
-SHOUT_LEVEL >= 5    prints curl commands in yellow
+  NUXEO_URL
+  NUXEO_CREDENTIALS   in a <id>:<pwd>
+  SHOUT_LEVEL >= 5    prints curl commands in yellow
 
 Options:
---  [CURL_OPTION...]             No -X|--request allowed. Already in -XPUT mode.
--d, --dry-run, --dry[Rr]un       Do not execute the curl command
--h, --help                       Show this help message and exit
--n, --name --title NAME          Document name (title)
--p, --path PATH                  Path relative to workspace root
--t, --type TYPE                  Document type
+  --  [CURL_OPTION...]             No -X|--request allowed. Already in -XPUT mode.
+  -d, --dry-run, --dry[Rr]un       Do not execute the curl command
+  -h, --help                       Show this help message and exit
+  -n, --name --title NAME          Document name (title)
+  -p, --path PATH                  Path relative to workspace root
+  -r, --repo --repo-id REPO_ID     Target a specific repository.
+  -t, --type TYPE                  Document type
 
 Examples:
-$NAME -n my_doc -p my_workspace -t workspace -u localhost:8080
+  $NAME -n my_doc -p my_workspace -t workspace -u localhost:8080
 EOF
 }
 
@@ -73,7 +74,7 @@ sanitizePathSegment base_path # if a value was given, we still need to sanitize
 # normalize the doc_type and deduce doc_icon
 {
   IFS= read -r doc_type
-  read # ignore the lower case
+  # ignore the lower case
 } <<EOF
 $(printf '%s\n' "$doc_type" | properAndLowercase)
 EOF
