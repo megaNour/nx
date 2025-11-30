@@ -22,7 +22,7 @@ Examples:
 EOF
 }
 
-maybeHelp "$1"
+maybeHelp "$@"
 
 command=${1}.sh
 shift

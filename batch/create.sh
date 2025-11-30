@@ -28,7 +28,7 @@ Examples:
 EOF
 }
 
-maybeHelp "$1"
+maybeHelp "$@"
 
 args="$(getopt -o "$G_global_short_flags,h,i:" -l "$G_global_long_flags,help,index:,file-index:,file-idx:" -- "$@")"
 eval "set -- $args"

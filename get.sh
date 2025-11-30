@@ -24,7 +24,7 @@ Examples:
 EOF
 }
 
-maybeHelp "$1"
+maybeHelp "$@"
 
 # do it separately from eval or it will swallow any error code
 args="$(getopt -o "dh" -l "dry-run,dryrun,dryRun,help" -- "$@")"

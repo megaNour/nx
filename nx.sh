@@ -64,7 +64,7 @@ for f in "$ENTRY/utils/"*; do
   _autosource "$f" "$ENTRY/utils"
 done
 
-maybeHelp "$1"
+maybeHelp "$@"
 
 command=$1
 shift
