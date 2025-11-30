@@ -46,6 +46,10 @@ while true; do
     doc_name=$2
     shift
     ;;
+  -p | --path)
+    base_path=$2
+    shift
+    ;;
   -t | --type)
     doc_type=$2
     shift
@@ -67,7 +71,7 @@ shift
 # check the obtained values
 doc_type=${doc_type:-"File"}
 doc_name=${doc_name:-"my_test_$doc_type"}
-base_path=${doc_path-"default-domain/workspaces/"}
+base_path=${base_path-"default-domain/workspaces/"}
 
 sanitizePathSegment base_path # if a value was given, we still need to sanitize
 
