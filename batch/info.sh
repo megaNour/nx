@@ -26,7 +26,7 @@ EOF
 
 maybeHelp "$@"
 
-args="$(getopt -o "${G_global_short_flags}h" -l "$G_global_long_flags,help" -- "$@")"
+args="$(getopt -o "dh" -l "dryrun,dryRun,dry-run,help" -- "$@")"
 eval "set -- $args"
 
 while true; do
@@ -35,11 +35,11 @@ while true; do
     printHelp
     exit 0
     ;;
+  -d | --dry-run | --dry[Rr]un) dry_run=1 ;;
   --)
     shift
     break
     ;;
-  *) ;; # ignore unhandled flags without error and clear $@ from them
   esac
   shift
 done

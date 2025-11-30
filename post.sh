@@ -32,7 +32,7 @@ EOF
 maybeHelp "$@"
 
 # do it separately from eval or it will swallow any error code
-args=$(getopt -o ${G_global_short_flags}k:hn:P:p:r:t: -l $G_global_long_flags,key-value:,help,name:,absolute-path:,path:,repo:,repo-id:,type: -- "$@")
+args=$(getopt -o "dk:hn:P:p:r:t:" -l "dryrun,dryRun,dry-run,key-value:,help,name:,absolute-path:,path:,repo:,repo-id:,type:" -- "$@")
 eval "set -- $args"
 
 while true; do
@@ -41,6 +41,7 @@ while true; do
     printHelp
     exit 0
     ;;
+  -d | --dry-run | --dry[Rr]un) dry_run=1 ;;
   -n | --name)
     doc_name=$2
     shift
@@ -72,7 +73,6 @@ while true; do
     shift
     break
     ;;
-  *) ;; # ignore unhandled flags without error and clear $@ from them
   esac
   shift
 done

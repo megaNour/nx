@@ -32,7 +32,7 @@ EOF
 
 maybeHelp "$@"
 
-args="$(getopt -o "$G_global_short_flags,h,i:" -l "$G_global_long_flags,help,index:,file-index:,file-idx:" -- "$@")"
+args="$(getopt -o "dhi:" -l "dryrun,dryRun,dry-run,help,index:,file-index:,file-idx:" -- "$@")"
 eval "set -- $args"
 
 while true; do
@@ -61,7 +61,6 @@ while true; do
     shift
     break
     ;;
-  *) ;; # ignore unhandled flags without error and clear $@ from them
   esac
   shift
 done
