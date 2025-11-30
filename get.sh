@@ -2,8 +2,6 @@
 
 set -e
 
-NAME=${NAME:-$0}
-
 printHelp() {
   cat <<EOF
 Usage: $NAME [OPTIONS] [-- [CURL_OPTION...]]
