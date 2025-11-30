@@ -7,7 +7,7 @@ NAME=${NAME:-$0}
 printHelp() {
   cat <<EOF
 Usage: $NAME [OPTIONS] TARGET [-- [CURL_OPTION...]]
-  TARGET   target doc path. By default, prefixed '/default-domain/workspaces/'.
+  TARGET   target doc path last segment. By default prefixed '/default-domain/workspaces/'.
 
 Environments:
   NUXEO_URL
@@ -17,10 +17,10 @@ Environments:
 Options:
   --  [CURL_OPTION...]             No -X|--request allowed. Already in -XPOST mode.
   -d, --dry-run, --dry[Rr]un       Do not execute the curl command
-  -h, --help                       Show this help message and exit
-  -p, --path PATH                  Existing Parent path. Defaults to workspace root.
+  -h, --help                       Show this help message and exit.
+  -p, --path PATH                  Replace default path prefix.
   -n, --name --title NAME          Specify the document title. (otherwise same as path name)
-  -t, --type TYPE                  Document type
+  -t, --type TYPE                  Document type.
   -k, --key-value [JSON_KV]        Repeatably add a key:value pair, must be stringified.
                                      i.e. "\"my:key\": \"my_value\""
 
