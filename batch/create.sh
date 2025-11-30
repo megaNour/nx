@@ -6,10 +6,11 @@ Description:
   Creates Document(s) with the given BATCH_ID [FILE_INDEX].
 
 Usage:
-  $NAME BATCH_ID [FILE_INDEX]
+  $NAME TARGET_DOC_PATH BATCH_ID [FILE_INDEX]
 
-  BATCH_ID     A Nuxeo batch id. You can get one with ${NAME% *} init.
-  FILE_INDEX   If provided, only this file will be used in the operation.
+  TARGET_DOC_PATH   The path to the target document.
+  BATCH_ID          A Nuxeo batch id. You can get one with ${NAME% *} init.
+  FILE_INDEX        If provided, only this file will be used in the operation.
 
 Environments:
   NUXEO_URL           Example: "localhost:8080".
@@ -54,8 +55,8 @@ done
 
 rejectForbiddenFlags "$@"
 
-target=${1:?${_red}param 2: missing required file path from \'/default-domain/workspaces/\'.$_def}
-batch_id=${2:?${_red}param 1: batch Id required. Consider using ${NAME% *}.$_def}
+target=${1:?${_red}param 1: missing required file path from \'/default-domain/workspaces/\'.$_def}
+batch_id=${2:?${_red}param 2: batch Id required. Consider using ${NAME% *}.$_def}
 shift 2
 
 cmd="http://$NUXEO_URL/nuxeo/api/v1/upload/$batch_id$file_idx/execute/FileManager.Import --json"

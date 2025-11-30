@@ -30,7 +30,7 @@ args="$(getopt -o "${G_global_short_flags}h" -l "$G_global_long_flags,help" -- "
 eval "set -- $args"
 
 while true; do
-  case "$@" in
+  case "$1" in
   --)
     shift
     break
@@ -47,11 +47,12 @@ file_index=${2:?${_red}param 2: file index in the batch required$_def}
 file=${3:?${_red}param 3: file location required.$_def}
 file_type=${4:?${_red}param 4: mime-type value required for the X-File-Type header, e.g. "application/pdf"$_def}
 file_name=${file##*/}
+shift 4
 
-cmd="$nuxeo_url/nuxeo/api/v1/upload/$batch_id/$file_index
-  -H \"X-File-Name: $file_name\"
-  -H \"X-File-Type: $file_type\"
-  -H \"Content-Type: application/octet-stream\"
+cmd="$NUXEO_URL/nuxeo/api/v1/upload/$batch_id/$file_index \
+  -H \"X-File-Name: $file_name\" \
+  -H \"X-File-Type: $file_type\" \
+  -H \"Content-Type: application/octet-stream\" \
   --data-binary"
 payload="\"@/Users/Nour.Alkotob/Documents/PERSONAL/$file\""
 
