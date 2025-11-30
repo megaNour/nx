@@ -6,8 +6,8 @@ NAME=${NAME:-$0}
 
 printHelp() {
   cat <<EOF
-Usage: $NAME [OPTIONS] DOC_PATH [-- [CURL_OPTION...]]
-  DOC_PATH   target doc location from '/default-domain/workspaces/'.
+Usage: $NAME [OPTIONS] TARGET [-- [CURL_OPTION...]]
+  TARGET   target doc path. By default, prefixed '/default-domain/workspaces/'.
 
 Environments:
   NUXEO_URL
@@ -18,8 +18,8 @@ Options:
   --  [CURL_OPTION...]             No -X|--request allowed. Already in -XPOST mode.
   -d, --dry-run, --dry[Rr]un       Do not execute the curl command
   -h, --help                       Show this help message and exit
-  -p, --path PATH                  Existing Parent path relative to workspace root
-  -n, --name --title NAME          Document name (title)
+  -p, --path PATH                  Existing Parent path. Defaults to workspace root.
+  -n, --name --title NAME          Specify the document title. (otherwise same as path name)
   -t, --type TYPE                  Document type
   -k, --key-value [JSON_KV]        Repeatably add a key:value pair, must be stringified.
                                      i.e. "\"my:key\": \"my_value\""
@@ -70,9 +70,16 @@ done
 
 rejectForbiddenFlags "$@"
 
+target=${1:?${_red}param 1: missing required file path from \'/default-domain/workspaces/\'.$_def}
+shift
+
 # check the obtained values
 doc_type=${doc_type:-"File"}
-doc_name=${doc_name:-"my_test_$doc_type"}
+doc_name=${doc_name:-$target}
+doc_path=${doc_path-"default-domain/workspaces/"} # we put the trailing '/' to avoid the sanitizer to do it
+
+sanitizePathSegment doc_path # if a value was given, we still need to sanitize
+doc_path=${doc_path%/}       # in this case we don't need the trailing '/'
 
 # normalize the doc_type and deduce doc_icon
 {
@@ -82,10 +89,10 @@ doc_name=${doc_name:-"my_test_$doc_type"}
 $(printf '%s\n' "$doc_type" | properAndLowercase)
 EOF
 
-cmd="-H \"Content-type: application/json\"  \"$NUXEO_URL/nuxeo/api/v1/path/default-domain/workspaces/$doc_path\" -d"
+cmd="-H \"Content-type: application/json\"  \"$NUXEO_URL/nuxeo/api/v1$repo_id/path/$doc_path\" -d"
 payload="{
     \"entity-type\": \"document\",
-    \"name\":\"$doc_name\",
+    \"name\":\"$target\",
     \"type\": \"$doc_type\",
     \"properties\": {
         \"dc:title\": \"$doc_name\",

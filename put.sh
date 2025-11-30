@@ -68,16 +68,19 @@ shift
 # check the obtained values
 doc_type=${doc_type:-"File"}
 doc_name=${doc_name:-"my_test_$doc_type"}
+base_path=${doc_path-"default-domain/workspaces/"}
+
+sanitizePathSegment base_path # if a value was given, we still need to sanitize
 
 # normalize the doc_type and deduce doc_icon
 {
   IFS= read -r doc_type
-  IFS= read # ignore the proper case
+  read # ignore the lower case
 } <<EOF
 $(printf '%s\n' "$doc_type" | properAndLowercase)
 EOF
 
-cmd="-XPUT -H \"Content-type: application/json\" \"$NUXEO_URL/nuxeo/api/v1/path/default-domain/workspaces/$target\" -d"
+cmd="-XPUT -H \"Content-type: application/json\" \"$NUXEO_URL/nuxeo/api/v1/path/$base_path$target\" -d"
 payload="{
     \"entity-type\": \"document\",
     \"name\":\"$doc_name\",
