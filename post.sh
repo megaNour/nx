@@ -16,7 +16,8 @@ Options:
   --  [CURL_OPTION...]             No -X|--request allowed. Already in -XPOST mode.
   -d, --dry-run, --dry[Rr]un       Do not execute the curl command
   -h, --help                       Show this help message and exit.
-  -p, --path PATH                  Replace default path prefix.
+  -p, --path PATH                  Target path from workspace root.
+  -P, --absolute-path ABS_PATH     Target path from root.
   -n, --name --title NAME          Specify the document title. (otherwise same as path name)
   -r, --repo --repo-id REPO_ID     Target a specific repository.
   -t, --type TYPE                  Document type.
@@ -31,7 +32,7 @@ EOF
 maybeHelp "$@"
 
 # do it separately from eval or it will swallow any error code
-args=$(getopt -o ${G_global_short_flags}k:hn:p:r:t: -l $G_global_long_flags,key-value:,help,name:,path:,repo:,repo-id:,type: -- "$@")
+args=$(getopt -o ${G_global_short_flags}k:hn:P:p:r:t: -l $G_global_long_flags,key-value:,help,name:,absolute-path:,path:,repo:,repo-id:,type: -- "$@")
 eval "set -- $args"
 
 while true; do
@@ -49,7 +50,13 @@ while true; do
         $2"
     shift
     ;;
+  -P | --absolute-path)
+    base_path=
+    doc_path=$2
+    shift
+    ;;
   -p | --path)
+    base_path=default-domain/workspaces/
     doc_path=$2
     shift
     ;;
@@ -72,19 +79,15 @@ done
 
 rejectForbiddenFlags "$@"
 
-target=${1:?${_red}param 1: missing required file path from \'/default-domain/workspaces/\'.$_def}
+target=${1:?${_red}param 1: missing required file path.$_def}
 shift
 
 # check the obtained values
 doc_type=${doc_type:-"File"}
 doc_name=${doc_name:-$target}
-doc_path=${doc_path-"default-domain/workspaces/"} # we put the trailing '/' to avoid the sanitizer to do it
 
-sanitizePathSegment doc_path # if a value was given, we still need to sanitize
-doc_path=${doc_path%/}       # in this case we don't need the trailing '/'
-
-sanitizePathSegment repo_id
-[ -n "$repo_id" ] && repo_id=repo/$repo_id || :
+sanitizePathSegment doc_path "$base_path"
+sanitizePathSegment repo_id ${repo_id:+repo/}
 
 # normalize the doc_type and deduce doc_icon
 {

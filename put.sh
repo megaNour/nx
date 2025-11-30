@@ -16,7 +16,8 @@ Options:
   -d, --dry-run, --dry[Rr]un       Do not execute the curl command
   -h, --help                       Show this help message and exit
   -n, --name --title NAME          Document name (title)
-  -p, --path PATH                  Path relative to workspace root
+  -p, --path PATH                  Target path from workspace root.
+  -P, --absolute-path ABS_PATH     Target path from root.
   -r, --repo --repo-id REPO_ID     Target a specific repository.
   -t, --type TYPE                  Document type
 
@@ -28,7 +29,7 @@ EOF
 maybeHelp "$@"
 
 # do it separately from eval or it will swallow any error code
-args="$(getopt -o ${G_global_short_flags}hk:n:p:t: -l $G_global_long_flags,help,key-value:,name:,path:,type: -- "$@")"
+args="$(getopt -o ${G_global_short_flags}hk:n:p:r:t: -l $G_global_long_flags,help,key-value:,name:,path:,repo:,repo-id:,type: -- "$@")"
 eval "set -- $args"
 
 while true; do
@@ -46,8 +47,18 @@ while true; do
     doc_name=$2
     shift
     ;;
+  -P | --absolute-path)
+    base_path=
+    doc_path=$2
+    shift
+    ;;
   -p | --path)
-    base_path=$2
+    base_path=default-domain/workspaces/
+    doc_path=$2
+    shift
+    ;;
+  -r | --repo | --repo-id)
+    repo_id=$2
     shift
     ;;
   -t | --type)
@@ -65,15 +76,15 @@ done
 
 rejectForbiddenFlags "$@"
 
-target=${1:?param 1: ${_red}missing path to document to update.$_def}
+doc_path=${1:?param 1: ${_red}missing path to document to update.$_def}
 shift
 
 # check the obtained values
 doc_type=${doc_type:-"File"}
 doc_name=${doc_name:-"my_test_$doc_type"}
-base_path=${base_path-"default-domain/workspaces/"}
 
-sanitizePathSegment base_path # if a value was given, we still need to sanitize
+sanitizePathSegment doc_path "default-domain/workspaces/"
+sanitizePathSegment repo_id "repo/"
 
 # normalize the doc_type and deduce doc_icon
 {
@@ -83,7 +94,7 @@ sanitizePathSegment base_path # if a value was given, we still need to sanitize
 $(printf '%s\n' "$doc_type" | properAndLowercase)
 EOF
 
-cmd="-XPUT -H \"Content-type: application/json\" \"$NUXEO_URL/nuxeo/api/v1/path/$base_path$target\" -d"
+cmd="-XPUT -H \"Content-type: application/json\" \"$NUXEO_URL/nuxeo/api/v1/${repo_id}path/$doc_path\" -d"
 payload="{
     \"entity-type\": \"document\",
     \"name\":\"$doc_name\",

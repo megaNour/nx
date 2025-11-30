@@ -15,7 +15,9 @@ Options:
   --  [CURL_OPTION...]             No -X|--request allowed. Already in -XGET mode.
   -d, --dry-run, --dry[Rr]un       Do not execute the curl command
   -h, --help                       Show this help message and exit
-  -p, --path PATH                  Path relative to workspace root
+  -p, --path PATH                  Target path from workspace root.
+  -P, --absolute-path ABS_PATH     Target path from root.
+  -r, --repo --repo-id REPO_ID     Target a specific repository.
 
 Examples:
   $NAME -n my_doc -p my_workspace -t workspace -u localhost:8080
@@ -25,7 +27,7 @@ EOF
 maybeHelp "$@"
 
 # do it separately from eval or it will swallow any error code
-args="$(getopt -o "dh" -l "dry-run,dryrun,dryRun,help" -- "$@")"
+args="$(getopt -o "dhr:" -l "dry-run,dryrun,dryRun,help,repo:,repo-id:" -- "$@")"
 eval "set -- $args"
 
 while true; do
@@ -33,6 +35,20 @@ while true; do
   -h | --help)
     printHelp
     exit 0
+    ;;
+  -P | --absolute-path)
+    base_path=
+    doc_path=$2
+    shift
+    ;;
+  -p | --path)
+    base_path=default-domain/workspaces/
+    doc_path=$2
+    shift
+    ;;
+  -r | --repo | --repo-id)
+    repo_id=$2
+    shift
     ;;
   --)
     shift
@@ -44,7 +60,10 @@ while true; do
 done
 
 rejectForbiddenFlags "$@"
-target=${1?${_red}param 1: missing target to get from \'/default-domain/workspaces/\'$_def}
+doc_path=${1?${_red}param 1: missing target to get from \'/default-domain/workspaces/\'$_def}
 shift
 
-doCurl "$NUXEO_URL/nuxeo/api/v1/path/default-domain/workspaces/$target" $*
+sanitizePathSegment doc_path "$base_path"
+sanitizePathSegment repo_id "repo/"
+
+doCurl "$NUXEO_URL/nuxeo/api/v1/${repo_id}path/$doc_path" $*
