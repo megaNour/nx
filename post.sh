@@ -52,12 +52,11 @@ while true; do
     shift
     ;;
   -P | --absolute-path)
-    base_path=
+    absolute_path=1
     doc_path=$2
     shift
     ;;
   -p | --path)
-    base_path=default-domain/workspaces/
     doc_path=$2
     shift
     ;;
@@ -79,12 +78,14 @@ done
 
 rejectForbiddenFlags "$@"
 
-target=${1:?${_red}param 1: missing required file path.$_def}
+target=${1:?${_red}param 1: missing target path.$_def}
 shift
 
 # check the obtained values
 doc_type=${doc_type:-"File"}
 doc_name=${doc_name:-$target}
+
+[ -z "$absolute_path" ] && base_path=default-domain/workspaces/ || :
 
 sanitizePathSegment doc_path "$base_path"
 sanitizePathSegment repo_id ${repo_id:+repo/}

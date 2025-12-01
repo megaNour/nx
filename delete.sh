@@ -25,7 +25,7 @@ EOF
 }
 
 # do it separately from eval or it will swallow any error code
-args="$(getopt -o "dh" -l "dryrun,dryRun,dry-run,help" -- "$@")"
+args="$(getopt -o "dhP:p:" -l "dryrun,dryRun,dry-run,help,path:,absolute-path:" -- "$@")"
 eval "set -- $args"
 
 while true; do
@@ -36,12 +36,11 @@ while true; do
     ;;
   -d | --dry-run | --dry[Rr]un) dry_run=1 ;;
   -P | --absolute-path)
-    base_path=
+    absolute_path=1
     doc_path=$2
     shift
     ;;
   -p | --path)
-    base_path=default-domain/workspaces/
     doc_path=$2
     shift
     ;;
@@ -59,8 +58,10 @@ done
 
 rejectForbiddenFlags "$@"
 
-doc_path=${1?${_red}param 1: missing target to delete. Pass an empty string if you want to nuke everything under \'/default-domain/workspaces/\'$_def}
+doc_path=${1?${_red}param 1: missing path to delete.$_def}
 shift
+
+[ -z "$absolute_path" ] && base_path=default-domain/workspaces/ || :
 
 sanitizePathSegment doc_path "$base_path"
 sanitizePathSegment repo_id "repo/"

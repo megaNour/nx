@@ -27,7 +27,7 @@ EOF
 maybeHelp "$@"
 
 # do it separately from eval or it will swallow any error code
-args="$(getopt -o "dhr:" -l "dry-run,dryrun,dryRun,help,repo:,repo-id:" -- "$@")"
+args="$(getopt -o "dhP:p:r:" -l "dry-run,dryrun,dryRun,help,path:,absolute-path:,repo:,repo-id:" -- "$@")"
 eval "set -- $args"
 
 while true; do
@@ -38,12 +38,11 @@ while true; do
     ;;
   -d | --dry-run | --dry[Rr]un) dry_run=1 ;;
   -P | --absolute-path)
-    base_path=
+    absolute_path=1
     doc_path=$2
     shift
     ;;
   -p | --path)
-    base_path=default-domain/workspaces/
     doc_path=$2
     shift
     ;;
@@ -60,8 +59,10 @@ while true; do
 done
 
 rejectForbiddenFlags "$@"
-doc_path=${1?${_red}param 1: missing target to get from \'/default-domain/workspaces/\'$_def}
+doc_path=${1?${_red}param 1: missing path to get.$_def}
 shift
+
+[ -z "$absolute_path" ] && base_path=default-domain/workspaces/ || :
 
 sanitizePathSegment doc_path "$base_path"
 sanitizePathSegment repo_id "repo/"

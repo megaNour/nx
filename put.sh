@@ -29,7 +29,7 @@ EOF
 maybeHelp "$@"
 
 # do it separately from eval or it will swallow any error code
-args="$(getopt -o "dhk:n:p:r:t:" -l "dryrun,dryRun,dry-run,help,key-value:,name:,path:,repo:,repo-id:,type:" -- "$@")"
+args="$(getopt -o "dhk:n:P:p:r:t:" -l "dryrun,dryRun,dry-run,help,key-value:,name:,path:,absolute-path:,repo:,repo-id:,type:" -- "$@")"
 eval "set -- $args"
 
 while true; do
@@ -49,12 +49,11 @@ while true; do
     shift
     ;;
   -P | --absolute-path)
-    base_path=
+    absolute_path=1
     doc_path=$2
     shift
     ;;
   -p | --path)
-    base_path=default-domain/workspaces/
     doc_path=$2
     shift
     ;;
@@ -76,14 +75,16 @@ done
 
 rejectForbiddenFlags "$@"
 
-doc_path=${1:?param 1: ${_red}missing path to document to update.$_def}
+doc_path=${1:?param 1: ${_red}missing path to update.$_def}
 shift
 
 # check the obtained values
 doc_type=${doc_type:-"File"}
 doc_name=${doc_name:-"my_test_$doc_type"}
 
-sanitizePathSegment doc_path "default-domain/workspaces/"
+[ -z "$absolute_path" ] && base_path=default-domain/workspaces/ || :
+
+sanitizePathSegment doc_path "$base_path"
 sanitizePathSegment repo_id "repo/"
 
 # normalize the doc_type and deduce doc_icon

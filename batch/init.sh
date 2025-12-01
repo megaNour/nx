@@ -27,7 +27,7 @@ EOF
 
 maybeHelp "${1:-no}" # trigger help only if a help hint is given
 
-args="$(getopt -o "dh" -l "dryrun,dryRun,dry-run,help" -- "$@")"
+args="$(getopt -o "dhp:" -l "dryrun,dryRun,dry-run,help,provider:" -- "$@")"
 eval "set -- $args"
 
 while true; do
@@ -37,6 +37,10 @@ while true; do
     exit 0
     ;;
   -d | --dry-run | --dry[Rr]un) dry_run=1 ;;
+  -p | --provider)
+    provider=$2
+    shift
+    ;;
   --)
     shift
     break
@@ -45,10 +49,8 @@ while true; do
   shift
 done
 
-[ -n "$2" ] && infoHelp || : # make it clear we don't take a list of ids to query info for
 rejectForbiddenFlags "$@"
 
-[ -n "$1" ] && provider=$1 || :
-cmd="-XPOST${*:+ $*} \"$NUXEO_URL/nuxeo/api/v1/upload/new/${provider:-default}\""
+cmd="-XPOST \"$NUXEO_URL/nuxeo/api/v1/upload/new/${provider:-default}\""
 
 doCurl "$cmd" $*

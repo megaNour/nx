@@ -48,4 +48,6 @@ done
 rejectForbiddenFlags "$@"
 
 batch_id=${1:?param 1: batch id required}
+shift
+
 doCurl "$NUXEO_URL/nuxeo/api/v1/upload/$batch_id" $*

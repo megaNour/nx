@@ -6,11 +6,10 @@ Description:
   Creates Document(s) with the given BATCH_ID [FILE_INDEX].
 
 Usage:
-  $NAME TARGET_DOC_PATH BATCH_ID [FILE_INDEX]
+  $NAME TARGET_DOC_PATH BATCH_ID
 
   TARGET_DOC_PATH   The path to the target document.
   BATCH_ID          A Nuxeo batch id. You can get one with ${NAME% *} init.
-  FILE_INDEX        If provided, only this file will be used in the operation.
 
 Environments:
   NUXEO_URL           Example: "localhost:8080".
@@ -32,7 +31,7 @@ EOF
 
 maybeHelp "$@"
 
-args="$(getopt -o "dhi:" -l "dryrun,dryRun,dry-run,help,index:,file-index:,file-idx:" -- "$@")"
+args="$(getopt -o "dhi:P:p:" -l "dryrun,dryRun,dry-run,help,index:,file-index:,file-idx:,path:,absolute-path:" -- "$@")"
 eval "set -- $args"
 
 while true; do
@@ -43,13 +42,10 @@ while true; do
     ;;
   -d | --dry-run | --dry[Rr]un) dry_run=1 ;;
   -P | --absolute-path)
-    base_path=
-    doc_path=$2
+    absolute_path=1
     shift
     ;;
   -p | --path)
-    base_path=/default-domain/workspaces/ # here we want the leading '/'
-    doc_path=$2
     shift
     ;;
   -i | --index | --file-idx | --file-index)
@@ -67,12 +63,15 @@ done
 
 rejectForbiddenFlags "$@"
 
-target=${1:?${_red}param 1: missing required file path.$_def}
+[ -z "$absolute_path" ] && base_path=default-domain/workspaces/ || :
+
+doc_path=${1:?${_red}param 1: missing required file path.$_def}
 batch_id=${2:?${_red}param 2: batch Id required. Consider using ${NAME% *}.$_def}
 shift 2
 
 sanitizePathSegment doc_path "$base_path"
 
-cmd="http://$NUXEO_URL/nuxeo/api/v1/upload/$batch_id$file_idx/execute/FileManager.Import --json"
-payload="{ \"params\": { \"context\": { \"currentDocument\": \"$doc_path$target\" } } }"
-doCurlP "$cmd" "$payload" "$@"
+cmd="$NUXEO_URL/nuxeo/api/v1/upload/$batch_id$file_idx/execute/FileManager.Import --json"
+payload="{ \"context\": { \"currentDocument\": \"/$doc_path\" } }"
+
+doCurlP "$cmd" "$payload" $*
