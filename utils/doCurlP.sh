@@ -1,7 +1,6 @@
 #!/bin/sh
 
 doCurlP() {
-  shoutaf "$@"
   cmd=$1 && payload=$2 && shift 2
   [ ! -t 0 ] && maybe_pipe="cat | " || :
 
