@@ -54,6 +54,6 @@ cmd="$NUXEO_URL/nuxeo/api/v1/upload/$batch_id/$file_index \
   -H \"X-File-Type: $file_type\" \
   -H \"Content-Type: application/octet-stream\" \
   --data-binary"
-payload="\"@/Users/Nour.Alkotob/Documents/PERSONAL/$file\""
+payload="\"@$file\""
 
 doCurlP "$cmd" "$payload" $*
