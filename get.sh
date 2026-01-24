@@ -39,7 +39,7 @@ while true; do
   -d | --dry-run | --dry[Rr]un) dry_run=1 ;;
   -P | --absolute-path)
     absolute_path=1
-    doc_path=$2
+    base_path=$2
     shift
     ;;
   -p | --path)
@@ -64,7 +64,8 @@ shift
 
 [ -z "$absolute_path" ] && base_path=default-domain/workspaces/ || :
 
+sanitizePathSegment base_path
 sanitizePathSegment doc_path "$base_path"
-sanitizePathSegment repo_id "repo/"
+sanitizePathSegment repo_id
 
 doCurl "$NUXEO_URL/nuxeo/api/v1/${repo_id}path/$doc_path" $*

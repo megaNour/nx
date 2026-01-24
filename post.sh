@@ -16,6 +16,7 @@ Options:
   --  [CURL_OPTION...]             No -X|--request allowed. Already in -XPOST mode.
   -d, --dry-run, --dry[Rr]un       Do not execute the curl command
   -h, --help                       Show this help message and exit.
+  -I, --missing-icon               Use file icon if none available for the document type.
   -p, --path PATH                  Target path from workspace root.
   -P, --absolute-path ABS_PATH     Target path from root.
   -n, --name --title NAME          Specify the document title. (otherwise same as path name)
@@ -32,7 +33,7 @@ EOF
 maybeHelp "$@"
 
 # do it separately from eval or it will swallow any error code
-args=$(getopt -o "dk:hn:P:p:r:t:" -l "dryrun,dryRun,dry-run,key-value:,help,name:,absolute-path:,path:,repo:,repo-id:,type:" -- "$@")
+args=$(getopt -o "dk:hIn:P:p:r:t:" -l "dryrun,dryRun,dry-run,key-value:,help,name:,missing-icon,absolute-path:,path:,repo:,repo-id:,type:" -- "$@")
 eval "set -- $args"
 
 while true; do
@@ -68,6 +69,9 @@ while true; do
     doc_type=$2
     shift
     ;;
+  -I | --missing-icon)
+    no_icon=1
+    ;;
   --)
     shift
     break
@@ -87,6 +91,7 @@ doc_name=${doc_name:-$target}
 
 [ -z "$absolute_path" ] && base_path=default-domain/workspaces/ || :
 
+sanitizePathSegment base_path
 sanitizePathSegment doc_path "$base_path"
 sanitizePathSegment repo_id ${repo_id:+repo/}
 
@@ -98,7 +103,10 @@ sanitizePathSegment repo_id ${repo_id:+repo/}
 $(printf '%s\n' "$doc_type" | properAndLowercase)
 EOF
 
-cmd="-H \"Content-type: application/json\"  \"$NUXEO_URL/nuxeo/api/v1/${repo_id}path/$doc_path\" -d"
+# Exotic file types will have no icon, file by default
+[ -n "$no_icon" ] && doc_icon="file" || :
+
+cmd="-H \"Content-type: application/json\" \"$NUXEO_URL/nuxeo/api/v1/${repo_id}path/$doc_path\" -d"
 payload="{
     \"entity-type\": \"document\",
     \"name\":\"$target\",

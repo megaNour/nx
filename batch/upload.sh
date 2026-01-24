@@ -3,10 +3,10 @@
 printHelp() {
   cat <<EOF
 Description:
-  Retrieve info for a specific batch.
+  Upload files to a specific batch.
 
 Usage:
-  $NAME BATCH_ID FILE_INDEX FILE MIMETYPE
+  $NAME BATCH_ID FILE_INDEX MIMETYPE FILE
   $NAME [help|-h|--help]
 
 Environments:
@@ -51,13 +51,13 @@ file_index=${2:?${_red}param 2: file index in the batch required${_def}}
 mime_type=${3:?${_red}param 3: mime-type value required for the X-File-Type header, e.g. "application/pdf"${_def}}
 shift=3
 
-if [ ! -t 0 ]; then
+if [ -r "$4" ]; then
+  file_path=@${4:?${_red}param 4: file-path required in interactive mode (no pipe)${_def}}
+  doc_name=${doc_name:-${4##*/}}
+  shift=4
+elif [ ! -t 0 ]; then
   file_path=@- # taking from stdin
   doc_name=${doc_name:-piped_content.$$.txt}
-elif [ -r "$4" ]; then
-  file_path=@${4:?${_red}param 4: file-path required in interactive mode (no pipe)${_def}}
-  doc_name=${doc_name:-${4##/}}
-  shift=4
 else
   shoutf "${_red}No file provided, need either a file location or stdin"
   exit 1
@@ -66,13 +66,9 @@ fi
 shift $shift
 
 cmd="$NUXEO_URL/nuxeo/api/v1/upload/$batch_id/$file_index \
-  -H \"X-File-Name: $doc_name\" \
-  -H \"X-File-Type: $mime_type\" \
-  -H \"Content-Type: application/octet-stream\" \
-  --data-binary"
+-H \"X-File-Name: $doc_name\" \
+-H \"X-File-Type: $mime_type\" \
+-H \"Content-Type: application/octet-stream\" \
+--data-binary"
 
-if [ -t 0 ]; then
-  doCurlP "$cmd" "$file_path" $*
-else
-  cat | doCurlP "$cmd" "$file_path" $*
-fi
+doCurlP "$cmd" "$file_path" $*

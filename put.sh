@@ -84,6 +84,7 @@ doc_name=${doc_name:-"my_test_$doc_type"}
 
 [ -z "$absolute_path" ] && base_path=default-domain/workspaces/ || :
 
+sanitizePathSegment base_path
 sanitizePathSegment doc_path "$base_path"
 sanitizePathSegment repo_id "repo/"
 

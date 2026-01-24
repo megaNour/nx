@@ -63,6 +63,7 @@ shift
 
 [ -z "$absolute_path" ] && base_path=default-domain/workspaces/ || :
 
+sanitizePathSegment base_path
 sanitizePathSegment doc_path "$base_path"
 sanitizePathSegment repo_id "repo/"
 

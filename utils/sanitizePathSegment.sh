@@ -17,7 +17,10 @@ sanitizePathSegment() {
     *) _sanPS_base_path=$_sanPS_base_path/ ;;      # add the missing trailer
     esac
   done
-  eval "$1=$2$_sanPS_base_path" # return the value
+
+  # return the value
+  affectation=$(printf '%s="%s%s"\n\n' "$1" "$2" "$_sanPS_base_path")
+  eval "$affectation"
 }
 
 # for test in "" / alfa/bravo /alfa/bravo /alfa/bravo/ /alfa/bravo/// //alfa/bravo///; do
