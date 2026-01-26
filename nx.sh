@@ -36,15 +36,16 @@ ${_mag}Environments:$_res
   ${_yel}NUXEO_CREDENTIALS$_res    Used by curl to authenticate.
 
 ${_mag}COMMAND:$_res
-  ${_yel}[ANYTHING_UNLISTED]$_res  Display contextual help.
-  ${_yel}cd$_res                   Go to your \$NUXEO_HOME
-  ${_yel}pd$_res                   Print \$NUXEO_HOME.
-  ${_yel}console$_res              Perform nuxeoctl console.
-  ${_yel}start$_res                Perform nuxeoctl start.
-  ${_yel}stop$_res                 Perform nuxeoctl stop.
-  ${_yel}post$_res                 Create a document.
-  ${_yel}get$_res                  Read a document.
-  ${_yel}batch$_res                Init a batch, upload binaries, create corresponding docs.
+  ${_yel}[ANYTHING_UNLISTED]$_res     Display contextual help.
+  ${_yel}cd$_res                      Go to your \$NUXEO_HOME
+  ${_yel}pd$_res                      Print \$NUXEO_HOME.
+  ${_yel}console$_res                 Perform nuxeoctl console.
+  ${_yel}start$_res                   Perform nuxeoctl start.
+  ${_yel}stop$_res                    Perform nuxeoctl stop.
+  ${_yel}get|post|put|delete$_res     Document path-based CRUD.
+  ${_yel}batch$_res                   Batch upload commands.
+  ${_yel}operation$_res               Trigger an operation.
+  ${_yel}bulk$_res                    Bulk commands.
 
 ${_mag}Examples:$_res
   # display help specific to the init subcommand of the batch subcommand.
